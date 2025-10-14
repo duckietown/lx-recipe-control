@@ -1,15 +1,15 @@
 # syntax=docker/dockerfile:1.4
 # parameters
-ARG EXERCISE_NAME="<LX_NAME_HERE>"
-ARG DESCRIPTION="<DESCRIPTION_HERE>"
-ARG MAINTAINER="<YOUR_FULL_NAME> (<YOUR_EMAIL_ADDRESS>)"
+ARG EXERCISE_NAME="Control"
+ARG DESCRIPTION="Build a PID Controller"
+ARG MAINTAINER="Liam Paull"
 
 # ==================================================>
 # ==> Do not change the code below this line
 ARG ARCH
 ARG DISTRO=ente
 ARG DOCKER_REGISTRY=docker.io
-ARG BASE_IMAGE=<BASE_IMAGE>
+ARG BASE_IMAGE=dt-ros-commons
 ARG BASE_TAG=${DISTRO}-${ARCH}
 ARG LAUNCHER=default
 
