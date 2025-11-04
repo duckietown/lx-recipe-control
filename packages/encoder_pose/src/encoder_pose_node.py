@@ -60,6 +60,8 @@ class EncoderPoseNode(DTROS):
         # a new activity selected
         rospy.Subscriber(f"/{self.veh}/activity_name", String, self.cbActivity, queue_size=1)
 
+        rospy.Subscriber(f"/{self.veh}/PID_parameters", String, self.cbPIDparam, queue_size=1)
+
 
         # Wheel encoder subscriber:
         right_encoder_topic = f"/{self.veh}/right_wheel_encoder_driver_node/tick"
@@ -73,7 +75,8 @@ class EncoderPoseNode(DTROS):
         self.log("Initialized.")
 
     def resetParameters(self):
-        # Add the node parameters to the parameters dictionary
+
+        self.log("Encoder pose resetting")
         self.delta_phi_left = 0.0
         self.left_tick_prev = None
 
@@ -84,6 +87,15 @@ class EncoderPoseNode(DTROS):
         self.x_prev = 0.0
         self.y_prev = 0.0
         self.theta_prev = 0.0
+
+    def cbPIDparam(self, msg):
+        """
+        Every time we STOP we reset the parameters
+        """
+        PID_parameters = msg.data
+        if PID_parameters == "STOP":
+            self.resetParameters()
+
 
     def cbActivity(self, msg):
         """

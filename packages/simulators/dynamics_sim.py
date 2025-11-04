@@ -6,7 +6,7 @@ from duckietown_world import (
     SE2Transform,
     DynamicModel,
 )
-
+from utils.writer import load_gains
 import numpy as np
 import geometry as geo
 
@@ -72,6 +72,9 @@ def integrate_dynamics(
     omega = initial_vel[1]
 
     PIDcontroller = controller()
+    kp, kd, ki = load_gains(filepath="../packages/solution/OFFSET_GAINS.yaml")
+    PIDcontroller.SetGains(kp=float(kp), ki=float(ki), kd=float(kd))
+
     last_pose = geo.SE2_from_xytheta(initial_pose)
     last_vel = geo.se2_from_linear_angular(
         np.array([v * np.cos(initial_pose[2]), v * np.sin(initial_pose[2])]), omega

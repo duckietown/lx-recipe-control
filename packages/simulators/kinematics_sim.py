@@ -1,4 +1,5 @@
 import numpy as np
+from utils.writer import load_gains
 
 def get_next_pose(icc_pos, d, cur_theta, theta_displacement):
     """
@@ -107,6 +108,8 @@ def integrate_kinematics(initial_pose:list, initial_vel:list, y_ref:float, contr
         - angles: list of yaw angles
     """
     PIDcontroller = controller()
+    kp, kd, ki = load_gains(filepath="../packages/solution/OFFSET_GAINS.yaml")
+    PIDcontroller.SetGains(kp=float(kp), ki=float(ki), kd=float(kd))
     cur_pos = np.array(initial_pose[0:2])   # initial position of the robot
     cur_angle = initial_pose[2]             # initial yaw angle of the robot
     wheel_dist = 0.1                        # distance between left and right wheels in meters, i.e., 2L
