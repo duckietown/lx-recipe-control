@@ -1,5 +1,5 @@
 # LIST YOUR PYTHON3 PACKAGES HERE
 
-numpy<=1.21.0
+numpy
 duckietown-world-daffy
 ipywidgets
