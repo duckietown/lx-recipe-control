@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 # parameters
-ARG EXERCISE_NAME="Control"
+ARG EXERCISE_NAME="control"
 ARG DESCRIPTION="VSCode - Control"
 ARG MAINTAINER="Liam Paull"
 
@@ -34,7 +34,7 @@ ARG TARGETVARIANT
 RUN dt-build-env-check "${EXERCISE_NAME}" "${MAINTAINER}" "${DESCRIPTION}"
 
 # define/create repository path
-ARG REPO_PATH="${CATKIN_WS_DIR}/src/${EXERCISE_NAME}"
+ARG REPO_PATH="/code/src/${EXERCISE_NAME}"
 RUN mkdir -p "${REPO_PATH}"
 WORKDIR "${REPO_PATH}"
 
@@ -46,7 +46,15 @@ RUN dt-apt-install /tmp/dependencies-apt.txt
 ARG PIP_INDEX_URL="https://pypi.org/simple"
 ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 COPY --from=recipe ./dependencies-py3.* "/tmp/"
-RUN python3 -m pip install -r /tmp/dependencies-py3.txt
+RUN python3 -m pip install -r /tmp/dependencies-py3.txt && \
+    python3 -c "\
+import site, os; \
+offending = 'setattr(TypeVar, \"__repr__\", typevar__repr__)'; \
+replacement = 'try:\n    setattr(TypeVar, \"__repr__\", typevar__repr__)\nexcept TypeError:\n    pass'; \
+[open(f, 'w').write(open(f).read().replace(offending, replacement)) \
+ for d in site.getsitepackages() \
+ for f in [os.path.join(d, 'duckietown_world', '__init__.py')] \
+ if os.path.exists(f)]"
 
 # copy the source code (recipe)
 COPY --from=recipe ./packages "${REPO_PATH}/packages"
