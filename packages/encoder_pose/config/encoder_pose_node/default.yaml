@@ -1,0 +1,4 @@
+/**:
+  ros__parameters:
+    # rate [Hz] at which the pose estimate is published (and the controller runs)
+    rate: 2.0
